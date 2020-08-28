@@ -1,0 +1,1 @@
+# Terraform Module for Monitoring using Prometheus, Alertmanager and Grafana
