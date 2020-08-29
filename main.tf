@@ -32,6 +32,7 @@ data "template_file" "cloud_config_script" {
   vars = {
     prometheus_hostname   = var.prometheus_hostname
     alertmanager_hostname = var.alertmanager_hostname
+    grafana_hostname      = var.grafana_hostname
     config_bucket_name    = var.config_bucket_name
     password              = var.password
   }

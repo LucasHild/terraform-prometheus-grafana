@@ -8,6 +8,11 @@ variable "alertmanager_hostname" {
   type        = string
 }
 
+variable "grafana_hostname" {
+  description = "Hostname for Grafana"
+  type        = string
+}
+
 variable "config_bucket_name" {
   description = "Name of S3 bucket that stores config files"
   type        = string

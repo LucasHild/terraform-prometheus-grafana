@@ -12,6 +12,7 @@ module "monitoring" {
 
   prometheus_hostname   = "prometheus.example.com"
   alertmanager_hostname = "alertmanager.example.com"
+  grafana_hostname      = "grafana.example.com"
   config_bucket_name    = "my-monitoring-config"
 }
 ```
@@ -40,6 +41,11 @@ To use your own configuration you have to apply the following folder structure:
 - config
   - alertmanager
     - alertmanager.yml
+  - grafana
+    - provisioning
+      - datasources
+          datasource.yml
+    - grafana.ini
   - prometheus
     - prometheus.yml
     - rules.yml
