@@ -30,11 +30,10 @@ data "template_file" "cloud_config_script" {
   template = file("${path.module}/cloud.conf")
 
   vars = {
-    prometheus_version    = "2.20.1"
-    alertmanager_version  = "0.21.1"
     prometheus_hostname   = var.prometheus_hostname
     alertmanager_hostname = var.alertmanager_hostname
     config_bucket_name    = var.config_bucket_name
+    password              = var.password
   }
 }
 

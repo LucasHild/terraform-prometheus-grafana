@@ -12,3 +12,8 @@ variable "config_bucket_name" {
   description = "Name of S3 bucket that stores config files"
   type        = string
 }
+
+variable "password" {
+  description = "Password for web frontend"
+  type        = string
+}
