@@ -36,6 +36,7 @@ data "template_file" "cloud_config_script" {
     grafana_hostname      = var.grafana_hostname
     config_bucket_name    = var.config_bucket_name
     password              = var.password
+    letsencrypt_email     = var.letsencrypt_email
   }
 }
 
@@ -54,6 +55,14 @@ resource "aws_security_group" "security_group" {
   ingress {
     from_port        = 80
     to_port          = 80
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  ingress {
+    from_port        = 443
+    to_port          = 443
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]

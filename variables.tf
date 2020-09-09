@@ -22,3 +22,8 @@ variable "password" {
   description = "Password for web frontend"
   type        = string
 }
+
+variable "letsencrypt_email" {
+  description = "Email for Let's Encrypt"
+  type        = string
+}
