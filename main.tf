@@ -17,6 +17,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_instance" "instance" {
   ami                  = data.aws_ami.ubuntu.id
   instance_type        = "t2.nano"
+  availability_zone    = "eu-central-1c"
   user_data            = data.template_file.cloud_config_script.rendered
   security_groups      = [aws_security_group.security_group.name]
   iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
@@ -69,6 +70,26 @@ resource "aws_security_group" "security_group" {
   tags = {
     Name = "Monitoring"
   }
+}
+
+resource "aws_ebs_volume" "data" {
+  availability_zone = "eu-central-1c"
+  size              = 1
+
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  tags = {
+    Name = "Monitoring Data"
+  }
+}
+
+resource "aws_volume_attachment" "data_attachment" {
+  device_name  = "/dev/xvdd"
+  volume_id    = aws_ebs_volume.data.id
+  instance_id  = aws_instance.instance.id
+  force_detach = true
 }
 
 resource "aws_s3_bucket" "config_bucket" {
