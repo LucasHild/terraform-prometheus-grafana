@@ -13,6 +13,12 @@ variable "grafana_hostname" {
   type        = string
 }
 
+variable "instance_type" {
+  description = "Instance type for EC2 instance"
+  type        = string
+  default     = "t2.nano"
+}
+
 variable "config_bucket_name" {
   description = "Name of S3 bucket that stores config files"
   type        = string

@@ -16,7 +16,7 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "instance" {
   ami                  = data.aws_ami.ubuntu.id
-  instance_type        = "t2.nano"
+  instance_type        = var.instance_type
   availability_zone    = "eu-central-1c"
   user_data            = data.template_file.cloud_config_script.rendered
   security_groups      = [aws_security_group.security_group.name]
@@ -85,9 +85,9 @@ resource "aws_ebs_volume" "data" {
   availability_zone = "eu-central-1c"
   size              = 1
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 
   tags = {
     Name = "Monitoring Data"
