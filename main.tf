@@ -8,7 +8,7 @@ module "prometheus" {
   key_name            = var.key_name
   instance_ami        = data.aws_ami.ubuntu.id
   instance_profile    = aws_iam_instance_profile.ec2_profile.name
-  instance_type       = "t3.medium"
+  instance_type       = "t3.large"
 }
 
 module "alertmanager" {
