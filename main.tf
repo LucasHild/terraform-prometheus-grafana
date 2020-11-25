@@ -1,3 +1,40 @@
+module "prometheus" {
+  source              = "./modules/prometheus"
+  hostname            = var.hostname_prometheus
+  password            = var.password
+  config_bucket_name  = var.config_bucket_name
+  letsencrypt_email   = var.letsencrypt_email
+  security_group_name = aws_security_group.security_group.name
+  key_name            = var.key_name
+  instance_ami        = data.aws_ami.ubuntu.id
+  instance_profile    = aws_iam_instance_profile.ec2_profile.name
+  instance_type       = "t3.medium"
+}
+
+module "alertmanager" {
+  source              = "./modules/alertmanager"
+  hostname            = var.hostname_alertmanager
+  password            = var.password
+  config_bucket_name  = var.config_bucket_name
+  letsencrypt_email   = var.letsencrypt_email
+  security_group_name = aws_security_group.security_group.name
+  key_name            = var.key_name
+  instance_ami        = data.aws_ami.ubuntu.id
+  instance_profile    = aws_iam_instance_profile.ec2_profile.name
+}
+
+module "grafana" {
+  source              = "./modules/grafana"
+  hostname            = var.hostname_grafana
+  password            = var.password
+  config_bucket_name  = var.config_bucket_name
+  letsencrypt_email   = var.letsencrypt_email
+  security_group_name = aws_security_group.security_group.name
+  key_name            = var.key_name
+  instance_ami        = data.aws_ami.ubuntu.id
+  instance_profile    = aws_iam_instance_profile.ec2_profile.name
+}
+
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -14,35 +51,9 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-resource "aws_instance" "instance" {
-  ami                  = data.aws_ami.ubuntu.id
-  instance_type        = var.instance_type
-  availability_zone    = "eu-central-1c"
-  user_data            = data.template_file.cloud_config_script.rendered
-  security_groups      = [aws_security_group.security_group.name]
-  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
-
-  tags = {
-    Name = "Monitoring"
-  }
-}
-
-data "template_file" "cloud_config_script" {
-  template = file("${path.module}/cloud.conf")
-
-  vars = {
-    prometheus_hostname   = var.prometheus_hostname
-    alertmanager_hostname = var.alertmanager_hostname
-    grafana_hostname      = var.grafana_hostname
-    config_bucket_name    = var.config_bucket_name
-    password              = var.password
-    letsencrypt_email     = var.letsencrypt_email
-  }
-}
-
 resource "aws_security_group" "security_group" {
   name        = "monitoring"
-  description = "Security group for monitoring instance"
+  description = "Security group for monitoring instances"
 
   ingress {
     from_port        = 22
@@ -77,28 +88,8 @@ resource "aws_security_group" "security_group" {
   }
 
   tags = {
-    Name = "Monitoring"
+    Name = "Monitoring Security Group"
   }
-}
-
-resource "aws_ebs_volume" "data" {
-  availability_zone = "eu-central-1c"
-  size              = 1
-
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
-
-  tags = {
-    Name = "Monitoring Data"
-  }
-}
-
-resource "aws_volume_attachment" "data_attachment" {
-  device_name  = "/dev/xvdd"
-  volume_id    = aws_ebs_volume.data.id
-  instance_id  = aws_instance.instance.id
-  force_detach = true
 }
 
 resource "aws_s3_bucket" "config_bucket" {

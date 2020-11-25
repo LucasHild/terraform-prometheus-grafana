@@ -1,14 +1,14 @@
-variable "prometheus_hostname" {
+variable "hostname_prometheus" {
   description = "Hostname for Prometheus"
   type        = string
 }
 
-variable "alertmanager_hostname" {
+variable "hostname_alertmanager" {
   description = "Hostname for Alertmanager"
   type        = string
 }
 
-variable "grafana_hostname" {
+variable "hostname_grafana" {
   description = "Hostname for Grafana"
   type        = string
 }
@@ -32,4 +32,10 @@ variable "password" {
 variable "letsencrypt_email" {
   description = "Email for Let's Encrypt"
   type        = string
+}
+
+variable "key_name" {
+  description = "Key name for EC2 instances"
+  type        = string
+  default     = ""
 }
