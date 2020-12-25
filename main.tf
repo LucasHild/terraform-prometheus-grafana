@@ -8,7 +8,7 @@ module "prometheus" {
   key_name            = var.key_name
   instance_ami        = data.aws_ami.ubuntu.id
   instance_profile    = aws_iam_instance_profile.ec2_profile.name
-  instance_type       = "t3.large"
+  instance_type       = "t2.micro"
 }
 
 module "alertmanager" {
@@ -90,6 +90,28 @@ resource "aws_security_group" "security_group" {
   tags = {
     Name = "Monitoring Security Group"
   }
+}
+
+# Allow Prometheus to access other instances (i.e. Alertmanager) in security on port 3000
+# This rule depends on both security group and instance so separating it allows it to be created after both
+resource "aws_security_group_rule" "security_group_internal_prometheus" {
+  security_group_id = aws_security_group.security_group.id
+  from_port         = 3000
+  to_port           = 3000
+  protocol          = "tcp"
+  type              = "ingress"
+  cidr_blocks       = ["${module.prometheus.public_ip}/32"]
+}
+
+# Allow Grafana to access other instances (i.e. Promehteus) in security on port 3000
+# This rule depends on both security group and instance so separating it allows it to be created after both
+resource "aws_security_group_rule" "security_group_internal_grafana" {
+  security_group_id = aws_security_group.security_group.id
+  from_port         = 3000
+  to_port           = 3000
+  protocol          = "tcp"
+  type              = "ingress"
+  cidr_blocks       = ["${module.grafana.public_ip}/32"]
 }
 
 resource "aws_s3_bucket" "config_bucket" {
