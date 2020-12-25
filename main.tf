@@ -156,3 +156,8 @@ resource "aws_iam_role_policy_attachment" "ec2_attach_ec2_access" {
   role       = aws_iam_role.ec2_role.id
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
 }
+
+resource "aws_iam_role_policy_attachment" "ec2_attach_cloudwatch_access" {
+  role       = aws_iam_role.ec2_role.id
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
+}
