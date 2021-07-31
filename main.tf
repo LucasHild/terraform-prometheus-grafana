@@ -55,41 +55,53 @@ resource "aws_security_group" "security_group" {
   name        = "monitoring"
   description = "Security group for monitoring instances"
 
-  ingress {
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
-  ingress {
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
-  ingress {
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
+  # Either all rules should be defined inline or none should be defined inline.
+  # Otherwise this can lead to mismatches and therefore attempts to overwrite configuration.
+  # Since we need some non-inline rules, all rules are defined as non-inline rules.
 
   tags = {
     Name = "Monitoring Security Group"
   }
+}
+
+resource "aws_security_group_rule" "security_group_ingress_ssh" {
+  security_group_id = aws_security_group.security_group.id
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+}
+
+resource "aws_security_group_rule" "security_group_ingress_http" {
+  security_group_id = aws_security_group.security_group.id
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+}
+
+resource "aws_security_group_rule" "security_group_ingress_https" {
+  security_group_id = aws_security_group.security_group.id
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+}
+
+resource "aws_security_group_rule" "security_group_egress" {
+  security_group_id = aws_security_group.security_group.id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
 }
 
 # Allow Prometheus to access other instances (i.e. Alertmanager) in security on port 3000
