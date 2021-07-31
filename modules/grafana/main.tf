@@ -7,6 +7,10 @@ resource "aws_instance" "instance" {
   iam_instance_profile = var.instance_profile
   key_name             = var.key_name
 
+  lifecycle {
+    ignore_changes = [ami]
+  }
+
   tags = {
     Name = "Monitoring - Grafana"
   }
