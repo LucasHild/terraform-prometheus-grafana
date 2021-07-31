@@ -58,6 +58,7 @@ resource "aws_security_group" "security_group" {
   # Either all rules should be defined inline or none should be defined inline.
   # Otherwise this can lead to mismatches and therefore attempts to overwrite configuration.
   # Since we need some non-inline rules, all rules are defined as non-inline rules.
+  # Reference: https://github.com/hashicorp/terraform/issues/11011#issuecomment-283076580
 
   tags = {
     Name = "Monitoring Security Group"
@@ -135,7 +136,7 @@ resource "aws_s3_bucket" "config_bucket" {
 }
 
 resource "aws_iam_role" "ec2_role" {
-  name               = "MonitoringEC2Instance"
+  name               = "monitoring-ec2-role"
   description        = "Allows EC2 instances to call AWS services on your behalf."
   assume_role_policy = <<EOF
 {
@@ -155,7 +156,7 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "ec2_profile"
+  name = "monitoring-ec2-profile"
   role = aws_iam_role.ec2_role.name
 }
 
