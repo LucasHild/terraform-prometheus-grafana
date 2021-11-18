@@ -65,16 +65,6 @@ resource "aws_security_group" "security_group" {
   }
 }
 
-resource "aws_security_group_rule" "security_group_ingress_ssh" {
-  security_group_id = aws_security_group.security_group.id
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  ipv6_cidr_blocks  = ["::/0"]
-}
-
 resource "aws_security_group_rule" "security_group_ingress_http" {
   security_group_id = aws_security_group.security_group.id
   type              = "ingress"
@@ -173,4 +163,10 @@ resource "aws_iam_role_policy_attachment" "ec2_attach_ec2_access" {
 resource "aws_iam_role_policy_attachment" "ec2_attach_cloudwatch_access" {
   role       = aws_iam_role.ec2_role.id
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_attach_ssm_access" {
+  count      = var.allow_session_manager ? 1 : 0
+  role       = aws_iam_role.ec2_role.id
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }

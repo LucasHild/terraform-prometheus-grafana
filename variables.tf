@@ -39,3 +39,9 @@ variable "key_name" {
   type        = string
   default     = ""
 }
+
+variable "allow_session_manager" {
+  description = "Add AWS Session Manager policy attachment"
+  type        = bool
+  default     = false
+}
