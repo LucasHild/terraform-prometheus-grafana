@@ -8,7 +8,7 @@ module "prometheus" {
   key_name            = var.key_name
   instance_ami        = data.aws_ami.ubuntu.id
   instance_profile    = aws_iam_instance_profile.ec2_profile.name
-  instance_type       = "t2.micro"
+  instance_type       = var.prometheus_instance_type
 }
 
 module "alertmanager" {
@@ -21,6 +21,7 @@ module "alertmanager" {
   key_name            = var.key_name
   instance_ami        = data.aws_ami.ubuntu.id
   instance_profile    = aws_iam_instance_profile.ec2_profile.name
+  instance_type       = var.alertmanager_instance_type
 }
 
 module "grafana" {
@@ -33,6 +34,7 @@ module "grafana" {
   key_name            = var.key_name
   instance_ami        = data.aws_ami.ubuntu.id
   instance_profile    = aws_iam_instance_profile.ec2_profile.name
+  instance_type       = var.grafana_instance_type
 }
 
 data "aws_ami" "ubuntu" {

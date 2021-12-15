@@ -13,8 +13,20 @@ variable "hostname_grafana" {
   type        = string
 }
 
-variable "instance_type" {
-  description = "Instance type for EC2 instance"
+variable "prometheus_instance_type" {
+  description = "Instance type for Prometheus EC2 instance"
+  type        = string
+  default     = "t2.nano"
+}
+
+variable "alertmanager_instance_type" {
+  description = "Instance type for Alertmanager EC2 instance"
+  type        = string
+  default     = "t2.nano"
+}
+
+variable "grafana_instance_type" {
+  description = "Instance type for Grafana EC2 instance"
   type        = string
   default     = "t2.nano"
 }
