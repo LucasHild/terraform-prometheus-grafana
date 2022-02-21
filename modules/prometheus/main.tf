@@ -12,7 +12,7 @@ resource "aws_instance" "instance" {
   }
 
   tags = {
-    Name = "Monitoring - Prometheus"
+    Name = "monitoring-prometheus"
   }
 }
 

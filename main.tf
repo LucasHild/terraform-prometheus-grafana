@@ -63,7 +63,7 @@ resource "aws_security_group" "security_group" {
   # Reference: https://github.com/hashicorp/terraform/issues/11011#issuecomment-283076580
 
   tags = {
-    Name = "Monitoring Security Group"
+    Name = "monitoring"
   }
 }
 
@@ -123,7 +123,7 @@ resource "aws_s3_bucket" "config_bucket" {
   bucket = var.config_bucket_name
 
   tags = {
-    Name = "Monitoring Config"
+    Name = "monitoring-config"
   }
 }
 
