@@ -97,26 +97,13 @@ resource "aws_security_group_rule" "security_group_egress" {
   ipv6_cidr_blocks  = ["::/0"]
 }
 
-# Allow Prometheus to access other instances (i.e. Alertmanager) in security on port 3000
-# This rule depends on both security group and instance so separating it allows it to be created after both
-resource "aws_security_group_rule" "security_group_internal_prometheus" {
+resource "aws_security_group_rule" "security_group_internal_self" {
   security_group_id = aws_security_group.security_group.id
   from_port         = 3000
   to_port           = 3000
   protocol          = "tcp"
   type              = "ingress"
-  cidr_blocks       = ["${module.prometheus.public_ip}/32"]
-}
-
-# Allow Grafana to access other instances (i.e. Promehteus) in security on port 3000
-# This rule depends on both security group and instance so separating it allows it to be created after both
-resource "aws_security_group_rule" "security_group_internal_grafana" {
-  security_group_id = aws_security_group.security_group.id
-  from_port         = 3000
-  to_port           = 3000
-  protocol          = "tcp"
-  type              = "ingress"
-  cidr_blocks       = ["${module.grafana.public_ip}/32"]
+  self              = true
 }
 
 resource "aws_s3_bucket" "config_bucket" {
