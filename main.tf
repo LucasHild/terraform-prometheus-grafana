@@ -115,23 +115,20 @@ resource "aws_s3_bucket" "config_bucket" {
 }
 
 resource "aws_iam_role" "ec2_role" {
-  name               = "monitoring-ec2-role"
-  description        = "Allows EC2 instances to call AWS services on your behalf."
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
+  name        = "monitoring-ec2-role"
+  description = "Allows EC2 instances to call AWS services on your behalf."
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
       },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
+    ]
+  })
 
   inline_policy {
     name = "s3_access"
