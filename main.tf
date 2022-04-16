@@ -132,16 +132,26 @@ resource "aws_iam_role" "ec2_role" {
   ]
 }
 EOF
+
+  inline_policy {
+    name = "s3_access"
+
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action   = ["s3:GetObject*", "s3:GetBucket*", "s3:List*"]
+          Effect   = "Allow"
+          Resource = ["arn:aws:s3:::${var.config_bucket_name}", "arn:aws:s3:::${var.config_bucket_name}/*"]
+        },
+      ]
+    })
+  }
 }
 
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "monitoring-ec2-profile"
   role = aws_iam_role.ec2_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "ec2_attach_s3_access" {
-  role       = aws_iam_role.ec2_role.id
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_attach_ec2_access" {
